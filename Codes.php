@@ -7,5 +7,6 @@ namespace SimQ {
         const CODE_NO_SECURE = 102;
         const CODE_GET_VERSION = 201;
         const CODE_AUTH_GROUP = 1001;
+        const CODE_GET_CHANNELS = 2001;
     }
 }
