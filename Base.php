@@ -135,13 +135,19 @@ namespace SimQ {
 
             foreach( $data as $item ) {
                 $length = $item['length'];
-                $body .= pack( "N", $length );
 
                 switch( $item['type'] ) {
                     case self::TYPE_INT:
+                        $body .= pack( "N", $length );
                         $body .= pack( "N", $item['value'] );
                         break;
-                    default:
+                    case self::TYPE_STRING:
+                        $body .= pack( "N", $length + 1 );
+                        $body .= $item['value'];
+                        $body .= "\0";
+                        break;
+                    case self::TYPE_PASSWORD:
+                        $body .= pack( "N", $length );
                         $body .= $item['value'];
                         break;
                 }
