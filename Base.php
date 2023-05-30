@@ -82,21 +82,23 @@ namespace SimQ {
 
             if( $data['length'] == 0 ) return $result;
 
+            $body = $this->_recv( $data['length'] );
+            if( $body === false ) return false;
+
+            $offset = 0;
+
             while( true ) {
-                $itemLength = $this->_recv( self::LENGTH_INT );
+                $length = unpack( "Nlength", $body )['length'];
 
-                if( $itemLength === false ) return false;
+                $offset += self::LENGTH_INT;
+                $body = substr( $body, $offset );
 
-                $length =unpack( "Nlength", $itemLength )['length'];
-                $data['length'] -= self::LENGTH_INT + $length;
+                $result['data'][] = substr( $body, 0, $length );
 
-                $item = $this->_recv( $length );
+                $offset += $length;
+                $body = substr( $body, $offset );
 
-                if( $item === false ) return false;
-
-                $result['data'][] = $item;
-
-                if( !$data['length'] ) break;
+                if( $offset == $data['length'] ) break;
             }
 
             return $result;
