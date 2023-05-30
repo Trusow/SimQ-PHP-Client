@@ -157,17 +157,19 @@ namespace SimQ {
 
             if( !$this->_send( $meta ) ) return false;
 
-            if( $lengthBody ) return $this->_send( $lengthBody );
-
-            return true;
+            return $lengthBody ? $this->_send( $lengthBody ) : true;
         }
 
         protected function recvPart( int $length ) {
             if( !$this->isConnect() ) return false;
+
+            return $this->_recv( $length );
         }
 
         protected function sendPart( string $data ) {
             if( !$this->isConnect() ) return false;
+
+            return $this->_send( $data );
         }
 
         protected function packInt( array $data, int $value ) {
