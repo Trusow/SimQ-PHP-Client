@@ -1,17 +1,13 @@
 <?php 
-
 namespace SimQ {
+    require_once( './Codes.php' );
+
     class Base {
         private $_version = 0;
 
         private $_isConnect = false;
         private $_socket;
         private $_isVerified = false;
-
-        private const CODE_NO_SECURE = 102;
-        private const CODE_GET_VERSION = 201;
-        private const CODE_OK = 10;
-        private const CODE_ERR = 20;
 
         private const TYPE_INT = 1;
         private const TYPE_STRING = 2;
@@ -34,19 +30,19 @@ namespace SimQ {
             if( $this->_isVerified ) return false;
             if( !$this->isConnect() ) return false;
 
-            if( !$this->sendCmd( self::CODE_NO_SECURE, [] ) ) return false;
+            if( !$this->sendCmd( Codes::CODE_NO_SECURE, [] ) ) return false;
 
             $res = $this->recvCmd();
 
             if( $res === false ) return false;
 
-            if( $res['cmd'] == self::CODE_ERR ) throw new \Exception( $res['data'][0] );
+            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
 
-            if( !$this->sendCmd( self::CODE_GET_VERSION, [] ) ) return false;
+            if( !$this->sendCmd( Codes::CODE_GET_VERSION, [] ) ) return false;
 
             $res = $this->recvCmd();
 
-            if( $res['cmd'] == self::CODE_ERR ) throw new \Exception( $res['data'][0] );
+            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
 
             $this->_version = $this->getAsNumber( $res['data'][0] );
 
