@@ -153,7 +153,7 @@ namespace SimQ {
 
             if( !$this->_send( $meta ) ) return false;
 
-            return $lengthBody ? $this->_send( $lengthBody ) : true;
+            return $lengthBody ? $this->_send( $body ) : true;
         }
 
         protected function recvPart( int $length ) {
