@@ -22,6 +22,7 @@ namespace SimQ {
 
         function __construct( string $host, int $port ) {
             $this->_socket = socket_create( AF_INET, SOCK_STREAM, SOL_TCP );
+            socket_set_option( $this->_socket, SOL_TCP, TCP_NODELAY, true );
             $this->_isConnect = socket_connect( $this->_socket, $host, $port );
         }
 
