@@ -36,5 +36,74 @@ namespace SimQ {
             return $res['data'];
 
         }
+
+        public function getChannelLimitMessages( string $channel ) {
+            if( $this->_isVerified ) return false;
+
+            $sendData = [];
+            $sendData = $this->packString( $sendData, $channel );
+
+            if( !$this->sendCmd( Codes::CODE_GET_CHANNEL_LIMIT_MESSAGES, $sendData ) ) return false;
+
+            $res = $this->recvCmd();
+
+            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+
+            $data = $res['data'];
+
+            return [
+                'minMessageSize' => $this->getAsNumber( $data[0] ),
+                'maxMessageSize' => $this->getAsNumber( $data[1] ),
+                'maxMessagesInMemory' => $this->getAsNumber( $data[2] ),
+                'maxMessagesOnDisk' => $this->getAsNumber( $data[3] ),
+            ];
+        }
+
+        public function addChannel( string $channel, array $limitMessages ) {
+            if( $this->_isVerified ) return false;
+
+            $sendData = [];
+            $sendData = $this->packString( $sendData, $channel );
+            $sendData = $this->packInt( $sendData, $limitMessages['minMessageSize'] );
+            $sendData = $this->packInt( $sendData, $limitMessages['maxMessageSize'] );
+            $sendData = $this->packInt( $sendData, $limitMessages['maxMessagesInMemory'] );
+            $sendData = $this->packInt( $sendData, $limitMessages['maxMessagesOnDisk'] );
+
+            if( !$this->sendCmd( Codes::CODE_ADD_CHANNEL, $sendData ) ) return false;
+
+            $res = $this->recvCmd();
+
+            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+        }
+
+        public function updateChannelLimitMessages( string $channel, array $limitMessages ) {
+            if( $this->_isVerified ) return false;
+
+            $sendData = [];
+            $sendData = $this->packString( $sendData, $channel );
+            $sendData = $this->packInt( $sendData, $limitMessages['minMessageSize'] );
+            $sendData = $this->packInt( $sendData, $limitMessages['maxMessageSize'] );
+            $sendData = $this->packInt( $sendData, $limitMessages['maxMessagesInMemory'] );
+            $sendData = $this->packInt( $sendData, $limitMessages['maxMessagesOnDisk'] );
+
+            if( !$this->sendCmd( Codes::CODE_UPDATE_CHANNEL_LIMIT_MESSAGES, $sendData ) ) return false;
+
+            $res = $this->recvCmd();
+
+            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+        }
+
+        public function removeChannel( string $channel ) {
+            if( $this->_isVerified ) return false;
+
+            $sendData = [];
+            $sendData = $this->packString( $sendData, $channel );
+
+            if( !$this->sendCmd( Codes::CODE_REMOVE_CHANNEL, $sendData ) ) return false;
+
+            $res = $this->recvCmd();
+
+            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+        }
     }
 }
