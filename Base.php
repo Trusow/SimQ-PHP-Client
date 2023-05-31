@@ -91,12 +91,12 @@ namespace SimQ {
                 $length = unpack( "Nlength", $body )['length'];
 
                 $offset += self::LENGTH_INT;
-                $body = substr( $body, $offset );
+                $body = substr( $body, self::LENGTH_INT );
 
                 $result['data'][] = substr( $body, 0, $length );
 
                 $offset += $length;
-                $body = substr( $body, $offset );
+                $body = substr( $body, $length );
 
                 if( $offset == $data['length'] ) break;
             }
