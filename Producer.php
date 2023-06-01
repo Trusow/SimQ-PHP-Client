@@ -24,8 +24,7 @@ namespace SimQ {
 
             if( !$this->sendCmd( Codes::CODE_AUTH_PRODUCER, $authData ) ) return;
 
-            $res = $this->recvCmd();
-            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+            $this->recvCmd();
 
             $this->_isVerified = true;
         }
