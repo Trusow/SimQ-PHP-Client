@@ -105,5 +105,123 @@ namespace SimQ {
 
             if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
         }
+
+        public function getConsumers( string $channel ) {
+            if( $this->_isVerified ) return false;
+
+            $sendData = [];
+            $sendData = $this->packString( $sendData, $channel );
+
+            if( !$this->sendCmd( Codes::CODE_GET_CONSUMERS, $sendData ) ) return false;
+
+            $res = $this->recvCmd();
+
+            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+
+            return $res['data'];
+        }
+
+        public function addConsumer( string $channel, string $login, string $password ) {
+            if( $this->_isVerified ) return false;
+
+            $sendData = [];
+            $sendData = $this->packString( $sendData, $channel );
+            $sendData = $this->packString( $sendData, $login );
+            $sendData = $this->packPassword( $sendData, $password );
+
+            if( !$this->sendCmd( Codes::CODE_ADD_CONSUMER, $sendData ) ) return false;
+
+            $res = $this->recvCmd();
+
+            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+        }
+
+        public function updateConsumerPassword( string $channel, string $login, string $password ) {
+            if( $this->_isVerified ) return false;
+
+            $sendData = [];
+            $sendData = $this->packString( $sendData, $channel );
+            $sendData = $this->packString( $sendData, $login );
+            $sendData = $this->packPassword( $sendData, $password );
+
+            if( !$this->sendCmd( Codes::CODE_UPDATE_CONSUMER_PASSWORD, $sendData ) ) return false;
+
+            $res = $this->recvCmd();
+
+            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+        }
+
+        public function removeConsumer( string $channel, string $login ) {
+            if( $this->_isVerified ) return false;
+
+            $sendData = [];
+            $sendData = $this->packString( $sendData, $channel );
+            $sendData = $this->packString( $sendData, $login );
+
+            if( !$this->sendCmd( Codes::CODE_REMOVE_CONSUMER, $sendData ) ) return false;
+
+            $res = $this->recvCmd();
+
+            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+        }
+
+        public function getProducers( string $channel ) {
+            if( $this->_isVerified ) return false;
+
+            $sendData = [];
+            $sendData = $this->packString( $sendData, $channel );
+
+            if( !$this->sendCmd( Codes::CODE_GET_PRODUCERS, $sendData ) ) return false;
+
+            $res = $this->recvCmd();
+
+            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+
+            return $res['data'];
+        }
+
+        public function addProducer( string $channel, string $login, string $password ) {
+            if( $this->_isVerified ) return false;
+
+            $sendData = [];
+            $sendData = $this->packString( $sendData, $channel );
+            $sendData = $this->packString( $sendData, $login );
+            $sendData = $this->packPassword( $sendData, $password );
+
+            if( !$this->sendCmd( Codes::CODE_ADD_PRODUCER, $sendData ) ) return false;
+
+            $res = $this->recvCmd();
+
+            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+        }
+
+        public function updateProducerPassword( string $channel, string $login, string $password ) {
+            if( $this->_isVerified ) return false;
+
+            $sendData = [];
+            $sendData = $this->packString( $sendData, $channel );
+            $sendData = $this->packString( $sendData, $login );
+            $sendData = $this->packPassword( $sendData, $password );
+
+            if( !$this->sendCmd( Codes::CODE_UPDATE_PROCUCER_PASSWORD, $sendData ) ) return false;
+
+            $res = $this->recvCmd();
+
+            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+        }
+
+        public function removeProducer( string $channel, string $login ) {
+            if( $this->_isVerified ) return false;
+
+            $sendData = [];
+            $sendData = $this->packString( $sendData, $channel );
+            $sendData = $this->packString( $sendData, $login );
+
+            if( !$this->sendCmd( Codes::CODE_REMOVE_PRODUCER, $sendData ) ) return false;
+
+            $res = $this->recvCmd();
+
+            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+        }
     }
 }
