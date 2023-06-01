@@ -6,6 +6,7 @@ namespace SimQ {
         const CODE_ERR = 20;
         const CODE_NO_SECURE = 102;
         const CODE_GET_VERSION = 201;
+        const CODE_UPDATE_PASSWORD = 301;
 
         const CODE_AUTH_GROUP = 1001;
         const CODE_AUTH_PRODUCER = 1003;
