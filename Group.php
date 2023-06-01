@@ -5,12 +5,9 @@ namespace SimQ {
     require_once( './Base.php' );
 
     class Group extends Base {
-        private $_isVerified = false;
-
         function __construct( string $host, int $port, string $group, string $password ) {
             parent::__construct( $host, $port );
             $this->connectNoSecure();
-
 
             $authData = [];
             $authData = $this->packString( $authData, $group );
@@ -21,11 +18,11 @@ namespace SimQ {
             $res = $this->recvCmd();
             if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
 
-            $_isVerified = true;
+            $this->_isVerified = true;
         }
 
         public function getChannels() {
-            if( $this->_isVerified ) return false;
+            if( !$this->_isVerified ) return false;
 
             if( !$this->sendCmd( Codes::CODE_GET_CHANNELS, [] ) ) return false;
 
@@ -38,7 +35,7 @@ namespace SimQ {
         }
 
         public function getChannelLimitMessages( string $channel ) {
-            if( $this->_isVerified ) return false;
+            if( !$this->_isVerified ) return false;
 
             $sendData = [];
             $sendData = $this->packString( $sendData, $channel );
@@ -60,7 +57,7 @@ namespace SimQ {
         }
 
         public function addChannel( string $channel, array $limitMessages ) {
-            if( $this->_isVerified ) return false;
+            if( !$this->_isVerified ) return false;
 
             $sendData = [];
             $sendData = $this->packString( $sendData, $channel );
@@ -77,7 +74,7 @@ namespace SimQ {
         }
 
         public function updateChannelLimitMessages( string $channel, array $limitMessages ) {
-            if( $this->_isVerified ) return false;
+            if( !$this->_isVerified ) return false;
 
             $sendData = [];
             $sendData = $this->packString( $sendData, $channel );
@@ -94,7 +91,7 @@ namespace SimQ {
         }
 
         public function removeChannel( string $channel ) {
-            if( $this->_isVerified ) return false;
+            if( !$this->_isVerified ) return false;
 
             $sendData = [];
             $sendData = $this->packString( $sendData, $channel );
@@ -107,7 +104,7 @@ namespace SimQ {
         }
 
         public function getConsumers( string $channel ) {
-            if( $this->_isVerified ) return false;
+            if( !$this->_isVerified ) return false;
 
             $sendData = [];
             $sendData = $this->packString( $sendData, $channel );
@@ -122,7 +119,7 @@ namespace SimQ {
         }
 
         public function addConsumer( string $channel, string $login, string $password ) {
-            if( $this->_isVerified ) return false;
+            if( !$this->_isVerified ) return false;
 
             $sendData = [];
             $sendData = $this->packString( $sendData, $channel );
@@ -137,7 +134,7 @@ namespace SimQ {
         }
 
         public function updateConsumerPassword( string $channel, string $login, string $password ) {
-            if( $this->_isVerified ) return false;
+            if( !$this->_isVerified ) return false;
 
             $sendData = [];
             $sendData = $this->packString( $sendData, $channel );
@@ -152,7 +149,7 @@ namespace SimQ {
         }
 
         public function removeConsumer( string $channel, string $login ) {
-            if( $this->_isVerified ) return false;
+            if( !$this->_isVerified ) return false;
 
             $sendData = [];
             $sendData = $this->packString( $sendData, $channel );
@@ -166,7 +163,7 @@ namespace SimQ {
         }
 
         public function getProducers( string $channel ) {
-            if( $this->_isVerified ) return false;
+            if( !$this->_isVerified ) return false;
 
             $sendData = [];
             $sendData = $this->packString( $sendData, $channel );
@@ -181,7 +178,7 @@ namespace SimQ {
         }
 
         public function addProducer( string $channel, string $login, string $password ) {
-            if( $this->_isVerified ) return false;
+            if( !$this->_isVerified ) return false;
 
             $sendData = [];
             $sendData = $this->packString( $sendData, $channel );
@@ -196,7 +193,7 @@ namespace SimQ {
         }
 
         public function updateProducerPassword( string $channel, string $login, string $password ) {
-            if( $this->_isVerified ) return false;
+            if( !$this->_isVerified ) return false;
 
             $sendData = [];
             $sendData = $this->packString( $sendData, $channel );
@@ -211,7 +208,7 @@ namespace SimQ {
         }
 
         public function removeProducer( string $channel, string $login ) {
-            if( $this->_isVerified ) return false;
+            if( !$this->_isVerified ) return false;
 
             $sendData = [];
             $sendData = $this->packString( $sendData, $channel );
