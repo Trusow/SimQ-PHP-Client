@@ -5,8 +5,6 @@ namespace SimQ {
     require_once( './Base.php' );
 
     class Producer extends Base {
-        private $_isVerified = false;
-
         function __construct(
             string $host,
             int $port,
@@ -29,7 +27,7 @@ namespace SimQ {
             $res = $this->recvCmd();
             if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
 
-            $_isVerified = true;
+            $this->_isVerified = true;
         }
     }
 }
