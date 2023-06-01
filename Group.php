@@ -15,8 +15,7 @@ namespace SimQ {
 
             if( !$this->sendCmd( Codes::CODE_AUTH_GROUP, $authData ) ) return;
 
-            $res = $this->recvCmd();
-            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+            $this->recvCmd();
 
             $this->_isVerified = true;
         }
@@ -27,8 +26,6 @@ namespace SimQ {
             if( !$this->sendCmd( Codes::CODE_GET_CHANNELS, [] ) ) return false;
 
             $res = $this->recvCmd();
-
-            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
 
             return $res['data'];
 
@@ -43,8 +40,6 @@ namespace SimQ {
             if( !$this->sendCmd( Codes::CODE_GET_CHANNEL_LIMIT_MESSAGES, $sendData ) ) return false;
 
             $res = $this->recvCmd();
-
-            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
 
             $data = $res['data'];
 
@@ -68,9 +63,7 @@ namespace SimQ {
 
             if( !$this->sendCmd( Codes::CODE_ADD_CHANNEL, $sendData ) ) return false;
 
-            $res = $this->recvCmd();
-
-            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+            $this->recvCmd();
         }
 
         public function updateChannelLimitMessages( string $channel, array $limitMessages ) {
@@ -98,9 +91,7 @@ namespace SimQ {
 
             if( !$this->sendCmd( Codes::CODE_REMOVE_CHANNEL, $sendData ) ) return false;
 
-            $res = $this->recvCmd();
-
-            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+            $this->recvCmd();
         }
 
         public function getConsumers( string $channel ) {
@@ -112,8 +103,6 @@ namespace SimQ {
             if( !$this->sendCmd( Codes::CODE_GET_CONSUMERS, $sendData ) ) return false;
 
             $res = $this->recvCmd();
-
-            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
 
             return $res['data'];
         }
@@ -128,9 +117,7 @@ namespace SimQ {
 
             if( !$this->sendCmd( Codes::CODE_ADD_CONSUMER, $sendData ) ) return false;
 
-            $res = $this->recvCmd();
-
-            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+            $this->recvCmd();
         }
 
         public function updateConsumerPassword( string $channel, string $login, string $password ) {
@@ -143,9 +130,7 @@ namespace SimQ {
 
             if( !$this->sendCmd( Codes::CODE_UPDATE_CONSUMER_PASSWORD, $sendData ) ) return false;
 
-            $res = $this->recvCmd();
-
-            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+            $this->recvCmd();
         }
 
         public function removeConsumer( string $channel, string $login ) {
@@ -157,9 +142,7 @@ namespace SimQ {
 
             if( !$this->sendCmd( Codes::CODE_REMOVE_CONSUMER, $sendData ) ) return false;
 
-            $res = $this->recvCmd();
-
-            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+            $this->recvCmd();
         }
 
         public function getProducers( string $channel ) {
@@ -171,8 +154,6 @@ namespace SimQ {
             if( !$this->sendCmd( Codes::CODE_GET_PRODUCERS, $sendData ) ) return false;
 
             $res = $this->recvCmd();
-
-            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
 
             return $res['data'];
         }
@@ -187,9 +168,7 @@ namespace SimQ {
 
             if( !$this->sendCmd( Codes::CODE_ADD_PRODUCER, $sendData ) ) return false;
 
-            $res = $this->recvCmd();
-
-            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+            $this->recvCmd();
         }
 
         public function updateProducerPassword( string $channel, string $login, string $password ) {
@@ -202,9 +181,7 @@ namespace SimQ {
 
             if( !$this->sendCmd( Codes::CODE_UPDATE_PROCUCER_PASSWORD, $sendData ) ) return false;
 
-            $res = $this->recvCmd();
-
-            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+            $this->recvCmd();
         }
 
         public function removeProducer( string $channel, string $login ) {
@@ -216,9 +193,7 @@ namespace SimQ {
 
             if( !$this->sendCmd( Codes::CODE_REMOVE_PRODUCER, $sendData ) ) return false;
 
-            $res = $this->recvCmd();
-
-            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+            $this->recvCmd();
         }
     }
 }
