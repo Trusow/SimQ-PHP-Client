@@ -8,6 +8,7 @@ namespace SimQ {
         const CODE_GET_VERSION = 201;
 
         const CODE_AUTH_GROUP = 1001;
+        const CODE_AUTH_PRODUCER = 1003;
 
         const CODE_GET_CHANNELS = 2001;
         const CODE_GET_CONSUMERS = 2002;
