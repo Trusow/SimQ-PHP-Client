@@ -99,6 +99,8 @@ namespace SimQ {
                 if( $offset == $data['length'] ) break;
             }
 
+            if( $result['cmd'] == Codes::CODE_ERR ) throw new \Exception( $result['data'][0] );
+
             return $result;
 
         }
