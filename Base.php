@@ -7,7 +7,7 @@ namespace SimQ {
 
         private $_isConnect = false;
         private $_socket;
-        private $_isVerified = false;
+        protected $_isVerified = false;
 
         private const TYPE_INT = 1;
         private const TYPE_STRING = 2;
@@ -28,7 +28,6 @@ namespace SimQ {
 
 
         protected function connectNoSecure() {
-            if( $this->_isVerified ) return false;
             if( !$this->isConnect() ) return false;
 
             if( !$this->sendCmd( Codes::CODE_NO_SECURE, [] ) ) return false;
@@ -46,8 +45,6 @@ namespace SimQ {
             if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
 
             $this->_version = $this->getAsNumber( $res['data'][0] );
-
-            $this->_isVerified = true;
 
             return true;
         }
@@ -206,8 +203,19 @@ namespace SimQ {
             return $data;
         }
 
+        public function updatePassword( $currentPassword, $newPassword ) {
+            if( !$this->_isVerified ) return false;
 
+            $sendData = [];
+            $sendData = $this->packPassword( $sendData, $currentPassword );
+            $sendData = $this->packPassword( $sendData, $newPassword );
 
+            if( !$this->sendCmd( Codes::CODE_UPDATE_PASSWORD, $sendData ) ) return false;
+
+            $res = $this->recvCmd();
+
+            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+        }
     };
 }
 
