@@ -76,9 +76,25 @@ namespace SimQ {
 
                 $offset += self::PACKET_SIZE;
 
-                if( $offset >= $this->length ) {
-                    break;
-                }
+                if( $offset >= $this->length ) break;
+            }
+        }
+
+        public function pushMessageFromPath( string $path ) {
+            $file = fopen( $path, 'r' );
+
+            $this->pushMessageFromFile( $file, 0 );
+        }
+
+        public function pushMessageFromFile( $file, int $offset ) {
+            while( true ) {
+                fseek( $file, $offset );
+                $this->sendPart( fread( $file, self::PACKET_SIZE ) );
+                $this->recvCmd();
+
+                $offset += self::PACKET_SIZE;
+
+                if( $offset >= $this->length ) break;
             }
         }
     }
