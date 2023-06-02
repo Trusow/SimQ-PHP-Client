@@ -5,6 +5,8 @@ namespace SimQ {
     require_once( './Base.php' );
 
     class Producer extends Base {
+        private $length = 0;
+
         function __construct(
             string $host,
             int $port,
@@ -34,6 +36,7 @@ namespace SimQ {
 
             $sendData = [];
             $sendData = $this->packInt( $sendData, $length );
+            $this->length = $length;
 
             if( !$this->sendCmd( Codes::CODE_CREATE_MESSAGE, $sendData ) ) return false;
 
@@ -46,6 +49,7 @@ namespace SimQ {
 
             $sendData = [];
             $sendData = $this->packInt( $sendData, $length );
+            $this->length = $length;
 
             if( !$this->sendCmd( Codes::CODE_CREATE_PUBLIC_MESSAGE, $sendData ) ) return false;
 
@@ -58,10 +62,25 @@ namespace SimQ {
             $sendData = [];
             $sendData = $this->packInt( $sendData, $length );
             $sendData = $this->packString( $sendData, $uuid );
+            $this->length = $length;
 
             if( !$this->sendCmd( Codes::CODE_CREATE_REPLICATE_MESSAGE, $sendData ) ) return false;
 
             $this->recvCmd();
+        }
+
+        public function pushMessage( string $data ) {
+            $offset = 0;
+            while( true ) {
+                $this->sendPart( substr( $data, $offset, self::PACKET_SIZE ) );
+                $this->recvCmd();
+
+                $offset += self::PACKET_SIZE;
+
+                if( $offset >= $this->length ) {
+                    break;
+                }
+            }
         }
     }
 }
