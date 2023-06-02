@@ -28,5 +28,40 @@ namespace SimQ {
 
             $this->_isVerified = true;
         }
+
+        public function createMessage( int $length ) {
+            if( !$this->_isVerified ) return false;
+
+            $sendData = [];
+            $sendData = $this->packInt( $sendData, $length );
+
+            if( !$this->sendCmd( Codes::CODE_CREATE_MESSAGE, $sendData ) ) return false;
+
+            $res = $this->recvCmd();
+            return $res['data'][0];
+        }
+
+        public function createPublicMessage( int $length ) {
+            if( !$this->_isVerified ) return false;
+
+            $sendData = [];
+            $sendData = $this->packInt( $sendData, $length );
+
+            if( !$this->sendCmd( Codes::CODE_CREATE_PUBLIC_MESSAGE, $sendData ) ) return false;
+
+            $this->recvCmd();
+        }
+
+        public function createReplicateMessage( int $length, string $uuid ) {
+            if( !$this->_isVerified ) return false;
+
+            $sendData = [];
+            $sendData = $this->packInt( $sendData, $length );
+            $sendData = $this->packString( $sendData, $uuid );
+
+            if( !$this->sendCmd( Codes::CODE_CREATE_REPLICATE_MESSAGE, $sendData ) ) return false;
+
+            $this->recvCmd();
+        }
     }
 }
