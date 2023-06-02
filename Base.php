@@ -16,6 +16,8 @@ namespace SimQ {
         private const LENGTH_INT = 4;
         private const LENGTH_HASH = 32;
 
+        protected const PACKET_SIZE = 4096;
+
         private $_sendData = '';
         private $_sendLength = 0;
         private $_fullSendLength = 0;
