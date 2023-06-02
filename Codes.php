@@ -27,5 +27,9 @@ namespace SimQ {
         const CODE_ADD_PRODUCER = 5001;
         const CODE_REMOVE_PRODUCER = 5002;
         const CODE_UPDATE_PROCUCER_PASSWORD = 5101;
+
+        const CODE_CREATE_MESSAGE = 6001;
+        const CODE_CREATE_REPLICATE_MESSAGE = 6002;
+        const CODE_CREATE_PUBLIC_MESSAGE = 6003;
     }
 }
