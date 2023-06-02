@@ -40,8 +40,7 @@ namespace SimQ {
 
             if( !$this->sendCmd( Codes::CODE_CREATE_MESSAGE, $sendData ) ) return false;
 
-            $res = $this->recvCmd();
-            return $res['data'][0];
+            $this->recvCmd();
         }
 
         public function createPublicMessage( int $length ) {
