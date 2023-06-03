@@ -105,16 +105,15 @@ namespace SimQ {
             if( !$this->sendCmd( Codes::CODE_POP_MESSAGE, $sendData ) ) return false;
 
             $res = $this->recvCmd();
-            $length = $this->getAsNumber( $res['data'][0] );
             $msg = new Message();
 
             switch( $res['cmd'] ) {
                 case Codes::CODE_NORMAL_MESSAGE:
-                    $msg->setLength( $length );
+                    $msg->setLength( $this->getAsNumber( $res['data'][0] ) );
                     $msg->setUUID( $res['data'][1] );
                     break;
                 case Codes::CODE_PUBLIC_MESSAGE:
-                    $msg->setLength( $length );
+                    $msg->setLength( $this->getAsNumber( $res['data'][0] ) );
                     break;
             }
 
