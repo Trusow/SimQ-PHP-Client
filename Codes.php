@@ -9,6 +9,7 @@ namespace SimQ {
         const CODE_UPDATE_PASSWORD = 301;
 
         const CODE_AUTH_GROUP = 1001;
+        const CODE_AUTH_CONSUMER = 1002;
         const CODE_AUTH_PRODUCER = 1003;
 
         const CODE_GET_CHANNELS = 2001;
@@ -31,5 +32,15 @@ namespace SimQ {
         const CODE_CREATE_MESSAGE = 6001;
         const CODE_CREATE_REPLICATE_MESSAGE = 6002;
         const CODE_CREATE_PUBLIC_MESSAGE = 6003;
+
+        const CODE_REMOVE_MESSAGE = 6101;
+        const CODE_REMOVE_MESSAGE_BY_UUID = 6102;
+
+        const CODE_POP_MESSAGE = 6201;
+        const CODE_GET_PART_MESSAGE = 6202;
+
+        const CODE_NORMAL_MESSAGE = 6301;
+        const CODE_PUBLIC_MESSAGE = 6302;
+        const CODE_NONE_MESSAGE = 6303;
     }
 }
