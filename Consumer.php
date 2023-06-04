@@ -92,6 +92,7 @@ namespace SimQ {
                     $msg->addData( $this->recvPart( self::PACKET_SIZE ) );
                     $length -= self::PACKET_SIZE;
                     $this->recvCmd();
+                    if( !$length ) break;
                 }
             }
         }
