@@ -113,7 +113,7 @@ namespace SimQ {
                     $msg->setLength( $this->getAsNumber( $res['data'][0] ) );
                     $msg->setUUID( $res['data'][1] );
                     break;
-                case Codes::CODE_PUBLIC_MESSAGE:
+                case Codes::CODE_SIGNAL_MESSAGE:
                     $msg->setLength( $this->getAsNumber( $res['data'][0] ) );
                     break;
             }

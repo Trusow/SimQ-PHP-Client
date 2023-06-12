@@ -31,7 +31,7 @@ namespace SimQ {
 
         const CODE_CREATE_MESSAGE = 6001;
         const CODE_CREATE_REPLICATE_MESSAGE = 6002;
-        const CODE_CREATE_PUBLIC_MESSAGE = 6003;
+        const CODE_CREATE_SIGNAL_MESSAGE = 6003;
 
         const CODE_REMOVE_MESSAGE = 6101;
         const CODE_REMOVE_MESSAGE_BY_UUID = 6102;
@@ -40,7 +40,7 @@ namespace SimQ {
         const CODE_GET_PART_MESSAGE = 6202;
 
         const CODE_NORMAL_MESSAGE = 6301;
-        const CODE_PUBLIC_MESSAGE = 6302;
+        const CODE_SIGNAL_MESSAGE = 6302;
         const CODE_NONE_MESSAGE = 6303;
     }
 }

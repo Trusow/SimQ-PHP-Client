@@ -43,14 +43,14 @@ namespace SimQ {
             $this->recvCmd();
         }
 
-        public function createPublicMessage( int $length ) {
+        public function createSignalMessage( int $length ) {
             if( !$this->_isVerified ) return false;
 
             $sendData = [];
             $sendData = $this->packInt( $sendData, $length );
             $this->length = $length;
 
-            if( !$this->sendCmd( Codes::CODE_CREATE_PUBLIC_MESSAGE, $sendData ) ) return false;
+            if( !$this->sendCmd( Codes::CODE_CREATE_SIGNAL_MESSAGE, $sendData ) ) return false;
 
             $this->recvCmd();
         }

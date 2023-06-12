@@ -30,7 +30,7 @@ namespace SimQ {
             return $this->uuid;
         }
 
-        public function isPublic() {
+        public function isSignal() {
             return $this->uuid == '';
         }
 
