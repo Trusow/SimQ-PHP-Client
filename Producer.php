@@ -97,5 +97,25 @@ namespace SimQ {
                 if( $offset >= $this->length ) break;
             }
         }
+
+        public function sendMessage( string $data ) {
+            $this->createMessage( strlen( $data ) );
+            $this->pushMessage( $data );
+        }
+
+        public function sendMessageFromPath( int $length, string $path ) {
+            $this->createMessage( $length );
+            $this->pushMessageFromPath( $path );
+        }
+
+        public function sendMessageFromFile( int $length, $file, int $offset ) {
+            $this->createMessage( $length );
+            $this->pushMessageFromFile( $file, $offset );
+        }
+
+        public function sendSignal( string $data ) {
+            $this->createSignalMessage( strlen( $data ) );
+            $this->pushMessage( $data );
+        }
     }
 }
