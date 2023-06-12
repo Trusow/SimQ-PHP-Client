@@ -36,7 +36,7 @@ namespace SimQ {
 
         public function setPath( string $path ) {
             $this->file = fopen( $path, 'w' );
-            fseek( $this->file, $offset );
+            fseek( $this->file, $this->offset );
         }
 
         public function setFile( $file, int $offset ) {
