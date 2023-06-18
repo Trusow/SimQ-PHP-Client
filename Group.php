@@ -195,5 +195,16 @@ namespace SimQ {
 
             $this->recvCmd();
         }
+
+        public function clearQ( string $channel ) {
+            if( !$this->_isVerified ) return false;
+
+            $sendData = [];
+            $sendData = $this->packString( $sendData, $channel );
+
+            if( !$this->sendCmd( Codes::CODE_CLEAR_Q, $sendData ) ) return false;
+
+            $this->recvCmd();
+        }
     }
 }
