@@ -103,8 +103,8 @@ namespace SimQ {
             $this->pushMessage( $data );
         }
 
-        public function sendMessageFromPath( int $length, string $path ) {
-            $this->createMessage( $length );
+        public function sendMessageFromPath( string $path ) {
+            $this->createMessage( filesize( $path ) );
             $this->pushMessageFromPath( $path );
         }
 
