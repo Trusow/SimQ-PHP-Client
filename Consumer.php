@@ -114,6 +114,7 @@ namespace SimQ {
                     $msg->setUUID( $res['data'][1] );
                     break;
                 case Codes::CODE_SIGNAL_MESSAGE:
+                    $msg->setSignal();
                     $msg->setLength( $this->getAsNumber( $res['data'][0] ) );
                     break;
             }
