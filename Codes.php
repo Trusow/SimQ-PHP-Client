@@ -20,6 +20,7 @@ namespace SimQ {
         const CODE_ADD_CHANNEL = 3001;
         const CODE_UPDATE_CHANNEL_LIMIT_MESSAGES = 3101;
         const CODE_REMOVE_CHANNEL = 3002;
+        const CODE_CLEAR_Q = 3201;
 
         const CODE_ADD_CONSUMER = 4001;
         const CODE_REMOVE_CONSUMER = 4002;
