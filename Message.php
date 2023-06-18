@@ -9,6 +9,7 @@ namespace SimQ {
         private int $offset = 0;
         private $file = null;
         private $data = '';
+        private $signal = false;
 
         public function setLength( int $length ) {
             $this->length = $length;
@@ -30,8 +31,12 @@ namespace SimQ {
             return $this->uuid;
         }
 
+        public function setSignal() {
+            $this->signal = true;
+        }
+
         public function isSignal() {
-            return $this->uuid == '';
+            return $this->signal;
         }
 
         public function setPath( string $path ) {
