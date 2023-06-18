@@ -6,6 +6,7 @@ namespace SimQ {
 
     class Producer extends Base {
         private $length = 0;
+        private $uuid = '';
 
         function __construct(
             string $host,
@@ -40,7 +41,15 @@ namespace SimQ {
 
             if( !$this->sendCmd( Codes::CODE_CREATE_MESSAGE, $sendData ) ) return false;
 
-            $this->recvCmd();
+            $data = $this->recvCmd();
+
+            if( isset( $data['data'] ) && !empty( $data['data'] ) ) {
+                $this->uuid = $data['data'][0];
+            }
+        }
+
+        public function getUUID() {
+            return $this->uuid;
         }
 
         public function createSignalMessage( int $length ) {
