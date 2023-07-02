@@ -1,125 +1,125 @@
 <?php 
 
-namespace SimQ {
-    require_once( './Codes.php' );
-    require_once( './Base.php' );
-    require_once( './Message.php' );
+namespace SimQ;
 
-    class Consumer extends Base {
-        function __construct(
-            string $host,
-            int $port,
-            string $group,
-            string $channel,
-            string $login,
-            string $password
-        ) {
-            parent::__construct( $host, $port );
-            $this->connectNoSecure();
+require_once( './Codes.php' );
+require_once( './Base.php' );
+require_once( './Message.php' );
 
-            $authData = [];
-            $authData = $this->packString( $authData, $group );
-            $authData = $this->packString( $authData, $channel );
-            $authData = $this->packString( $authData, $login );
-            $authData = $this->packPassword( $authData, $password );
+class Consumer extends Base {
+    function __construct(
+        string $host,
+        int $port,
+        string $group,
+        string $channel,
+        string $login,
+        string $password
+    ) {
+        parent::__construct( $host, $port );
+        $this->connectNoSecure();
 
-            if( !$this->sendCmd( Codes::CODE_AUTH_CONSUMER, $authData ) ) return;
+        $authData = [];
+        $authData = $this->packString( $authData, $group );
+        $authData = $this->packString( $authData, $channel );
+        $authData = $this->packString( $authData, $login );
+        $authData = $this->packPassword( $authData, $password );
 
-            $this->recvCmd();
+        if( !$this->sendCmd( Codes::CODE_AUTH_CONSUMER, $authData ) ) return;
 
-            $this->_isVerified = true;
-        }
+        $this->recvCmd();
 
-        public function popMessage( int $pollDelay = 0 ) {
-            $msg = $this->_popMessageMeta( $pollDelay );
-            if( $msg->isEmpty() ) return $msg;
+        $this->_isVerified = true;
+    }
 
-            $this->_addDataToMessage( $msg );
+    public function popMessage( int $pollDelay = 0 ) {
+        $msg = $this->_popMessageMeta( $pollDelay );
+        if( $msg->isEmpty() ) return $msg;
 
-            return $msg;
-        }
+        $this->_addDataToMessage( $msg );
 
-        public function popMessageToPath( string $path, int $pollDelay = 0 ) {
-            $msg = $this->_popMessageMeta( $pollDelay );
-            if( $msg->isEmpty() ) return $msg;
+        return $msg;
+    }
 
-            $msg->setPath( $path );
-            $this->_addDataToMessage( $msg );
+    public function popMessageToPath( string $path, int $pollDelay = 0 ) {
+        $msg = $this->_popMessageMeta( $pollDelay );
+        if( $msg->isEmpty() ) return $msg;
 
-            return $msg;
-        }
+        $msg->setPath( $path );
+        $this->_addDataToMessage( $msg );
 
-        public function popMessageToFile( $file, int $offset = 0, int $pollDelay = 0 ) {
-            $msg = $this->_popMessageMeta( $pollDelay );
-            if( $msg->isEmpty() ) return $msg;
+        return $msg;
+    }
 
-            $msg->setFile( $path, $offset );
-            $this->_addDataToMessage( $msg );
+    public function popMessageToFile( $file, int $offset = 0, int $pollDelay = 0 ) {
+        $msg = $this->_popMessageMeta( $pollDelay );
+        if( $msg->isEmpty() ) return $msg;
 
-            return $msg;
-        }
+        $msg->setFile( $path, $offset );
+        $this->_addDataToMessage( $msg );
 
-        public function removeMessage() {
-            if( !$this->_isVerified ) return false;
+        return $msg;
+    }
 
-            if( !$this->sendCmd( Codes::CODE_REMOVE_MESSAGE, [] ) ) return false;
+    public function removeMessage() {
+        if( !$this->_isVerified ) return false;
 
-            $this->recvCmd();
-        }
+        if( !$this->sendCmd( Codes::CODE_REMOVE_MESSAGE, [] ) ) return false;
 
-        public function removeMessageByUUID( string $uuid ) {
-            if( !$this->_isVerified ) return false;
+        $this->recvCmd();
+    }
 
-            $sendData = [];
-            $sendData = $this->packString( $sendData, $uuid );
+    public function removeMessageByUUID( string $uuid ) {
+        if( !$this->_isVerified ) return false;
 
-            if( !$this->sendCmd( Codes::CODE_REMOVE_MESSAGE_BY_UUID, $sendData ) ) return false;
+        $sendData = [];
+        $sendData = $this->packString( $sendData, $uuid );
 
-            $this->recvCmd();
-        }
+        if( !$this->sendCmd( Codes::CODE_REMOVE_MESSAGE_BY_UUID, $sendData ) ) return false;
 
-        private function _addDataToMessage( $msg ) {
-            $length = $msg->getLength();
+        $this->recvCmd();
+    }
 
-            while( true ) {
-                if( !$this->sendCmd( Codes::CODE_GET_PART_MESSAGE, [] ) ) return false;
-                
-                if( $length < self::PACKET_SIZE ) {
-                    $msg->addData( $this->recvPart( $length ) );
-                    $this->recvCmd();
-                    break;
-                } else {
-                    $msg->addData( $this->recvPart( self::PACKET_SIZE ) );
-                    $length -= self::PACKET_SIZE;
-                    $this->recvCmd();
-                    if( !$length ) break;
-                }
+    private function _addDataToMessage( $msg ) {
+        $length = $msg->getLength();
+
+        while( true ) {
+            if( !$this->sendCmd( Codes::CODE_GET_PART_MESSAGE, [] ) ) return false;
+            
+            if( $length < self::PACKET_SIZE ) {
+                $msg->addData( $this->recvPart( $length ) );
+                $this->recvCmd();
+                break;
+            } else {
+                $msg->addData( $this->recvPart( self::PACKET_SIZE ) );
+                $length -= self::PACKET_SIZE;
+                $this->recvCmd();
+                if( !$length ) break;
             }
         }
+    }
 
-        private function _popMessageMeta( int $pollDelay ) {
-            if( !$this->_isVerified ) return false;
+    private function _popMessageMeta( int $pollDelay ) {
+        if( !$this->_isVerified ) return false;
 
-            $sendData = [];
-            $sendData = $this->packInt( $sendData, $pollDelay );
+        $sendData = [];
+        $sendData = $this->packInt( $sendData, $pollDelay );
 
-            if( !$this->sendCmd( Codes::CODE_POP_MESSAGE, $sendData ) ) return false;
+        if( !$this->sendCmd( Codes::CODE_POP_MESSAGE, $sendData ) ) return false;
 
-            $res = $this->recvCmd();
-            $msg = new Message();
+        $res = $this->recvCmd();
+        $msg = new Message();
 
-            switch( $res['cmd'] ) {
-                case Codes::CODE_NORMAL_MESSAGE:
-                    $msg->setLength( $this->getAsNumber( $res['data'][0] ) );
-                    $msg->setUUID( $res['data'][1] );
-                    break;
-                case Codes::CODE_SIGNAL_MESSAGE:
-                    $msg->setSignal();
-                    $msg->setLength( $this->getAsNumber( $res['data'][0] ) );
-                    break;
-            }
-
-            return $msg;
+        switch( $res['cmd'] ) {
+            case Codes::CODE_NORMAL_MESSAGE:
+                $msg->setLength( $this->getAsNumber( $res['data'][0] ) );
+                $msg->setUUID( $res['data'][1] );
+                break;
+            case Codes::CODE_SIGNAL_MESSAGE:
+                $msg->setSignal();
+                $msg->setLength( $this->getAsNumber( $res['data'][0] ) );
+                break;
         }
+
+        return $msg;
     }
 }

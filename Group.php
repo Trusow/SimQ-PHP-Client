@@ -1,210 +1,210 @@
 <?php 
 
-namespace SimQ {
-    require_once( './Codes.php' );
-    require_once( './Base.php' );
+namespace SimQ;
 
-    class Group extends Base {
-        function __construct( string $host, int $port, string $group, string $password ) {
-            parent::__construct( $host, $port );
-            $this->connectNoSecure();
+require_once( './Codes.php' );
+require_once( './Base.php' );
 
-            $authData = [];
-            $authData = $this->packString( $authData, $group );
-            $authData = $this->packPassword( $authData, $password );
+class Group extends Base {
+    function __construct( string $host, int $port, string $group, string $password ) {
+        parent::__construct( $host, $port );
+        $this->connectNoSecure();
 
-            if( !$this->sendCmd( Codes::CODE_AUTH_GROUP, $authData ) ) return;
+        $authData = [];
+        $authData = $this->packString( $authData, $group );
+        $authData = $this->packPassword( $authData, $password );
 
-            $this->recvCmd();
+        if( !$this->sendCmd( Codes::CODE_AUTH_GROUP, $authData ) ) return;
 
-            $this->_isVerified = true;
-        }
+        $this->recvCmd();
 
-        public function getChannels() {
-            if( !$this->_isVerified ) return false;
+        $this->_isVerified = true;
+    }
 
-            if( !$this->sendCmd( Codes::CODE_GET_CHANNELS, [] ) ) return false;
+    public function getChannels() {
+        if( !$this->_isVerified ) return false;
 
-            $res = $this->recvCmd();
+        if( !$this->sendCmd( Codes::CODE_GET_CHANNELS, [] ) ) return false;
 
-            return $res['data'];
+        $res = $this->recvCmd();
 
-        }
+        return $res['data'];
 
-        public function getChannelLimitMessages( string $channel ) {
-            if( !$this->_isVerified ) return false;
+    }
 
-            $sendData = [];
-            $sendData = $this->packString( $sendData, $channel );
+    public function getChannelLimitMessages( string $channel ) {
+        if( !$this->_isVerified ) return false;
 
-            if( !$this->sendCmd( Codes::CODE_GET_CHANNEL_LIMIT_MESSAGES, $sendData ) ) return false;
+        $sendData = [];
+        $sendData = $this->packString( $sendData, $channel );
 
-            $res = $this->recvCmd();
+        if( !$this->sendCmd( Codes::CODE_GET_CHANNEL_LIMIT_MESSAGES, $sendData ) ) return false;
 
-            $data = $res['data'];
+        $res = $this->recvCmd();
 
-            return [
-                'minMessageSize' => $this->getAsNumber( $data[0] ),
-                'maxMessageSize' => $this->getAsNumber( $data[1] ),
-                'maxMessagesInMemory' => $this->getAsNumber( $data[2] ),
-                'maxMessagesOnDisk' => $this->getAsNumber( $data[3] ),
-            ];
-        }
+        $data = $res['data'];
 
-        public function addChannel( string $channel, array $limitMessages ) {
-            if( !$this->_isVerified ) return false;
+        return [
+            'minMessageSize' => $this->getAsNumber( $data[0] ),
+            'maxMessageSize' => $this->getAsNumber( $data[1] ),
+            'maxMessagesInMemory' => $this->getAsNumber( $data[2] ),
+            'maxMessagesOnDisk' => $this->getAsNumber( $data[3] ),
+        ];
+    }
 
-            $sendData = [];
-            $sendData = $this->packString( $sendData, $channel );
-            $sendData = $this->packInt( $sendData, $limitMessages['minMessageSize'] );
-            $sendData = $this->packInt( $sendData, $limitMessages['maxMessageSize'] );
-            $sendData = $this->packInt( $sendData, $limitMessages['maxMessagesInMemory'] );
-            $sendData = $this->packInt( $sendData, $limitMessages['maxMessagesOnDisk'] );
+    public function addChannel( string $channel, array $limitMessages ) {
+        if( !$this->_isVerified ) return false;
 
-            if( !$this->sendCmd( Codes::CODE_ADD_CHANNEL, $sendData ) ) return false;
+        $sendData = [];
+        $sendData = $this->packString( $sendData, $channel );
+        $sendData = $this->packInt( $sendData, $limitMessages['minMessageSize'] );
+        $sendData = $this->packInt( $sendData, $limitMessages['maxMessageSize'] );
+        $sendData = $this->packInt( $sendData, $limitMessages['maxMessagesInMemory'] );
+        $sendData = $this->packInt( $sendData, $limitMessages['maxMessagesOnDisk'] );
 
-            $this->recvCmd();
-        }
+        if( !$this->sendCmd( Codes::CODE_ADD_CHANNEL, $sendData ) ) return false;
 
-        public function updateChannelLimitMessages( string $channel, array $limitMessages ) {
-            if( !$this->_isVerified ) return false;
+        $this->recvCmd();
+    }
 
-            $sendData = [];
-            $sendData = $this->packString( $sendData, $channel );
-            $sendData = $this->packInt( $sendData, $limitMessages['minMessageSize'] );
-            $sendData = $this->packInt( $sendData, $limitMessages['maxMessageSize'] );
-            $sendData = $this->packInt( $sendData, $limitMessages['maxMessagesInMemory'] );
-            $sendData = $this->packInt( $sendData, $limitMessages['maxMessagesOnDisk'] );
+    public function updateChannelLimitMessages( string $channel, array $limitMessages ) {
+        if( !$this->_isVerified ) return false;
 
-            if( !$this->sendCmd( Codes::CODE_UPDATE_CHANNEL_LIMIT_MESSAGES, $sendData ) ) return false;
+        $sendData = [];
+        $sendData = $this->packString( $sendData, $channel );
+        $sendData = $this->packInt( $sendData, $limitMessages['minMessageSize'] );
+        $sendData = $this->packInt( $sendData, $limitMessages['maxMessageSize'] );
+        $sendData = $this->packInt( $sendData, $limitMessages['maxMessagesInMemory'] );
+        $sendData = $this->packInt( $sendData, $limitMessages['maxMessagesOnDisk'] );
 
-            $res = $this->recvCmd();
+        if( !$this->sendCmd( Codes::CODE_UPDATE_CHANNEL_LIMIT_MESSAGES, $sendData ) ) return false;
 
-            if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
-        }
+        $res = $this->recvCmd();
 
-        public function removeChannel( string $channel ) {
-            if( !$this->_isVerified ) return false;
+        if( $res['cmd'] == Codes::CODE_ERR ) throw new \Exception( $res['data'][0] );
+    }
 
-            $sendData = [];
-            $sendData = $this->packString( $sendData, $channel );
+    public function removeChannel( string $channel ) {
+        if( !$this->_isVerified ) return false;
 
-            if( !$this->sendCmd( Codes::CODE_REMOVE_CHANNEL, $sendData ) ) return false;
+        $sendData = [];
+        $sendData = $this->packString( $sendData, $channel );
 
-            $this->recvCmd();
-        }
+        if( !$this->sendCmd( Codes::CODE_REMOVE_CHANNEL, $sendData ) ) return false;
 
-        public function getConsumers( string $channel ) {
-            if( !$this->_isVerified ) return false;
+        $this->recvCmd();
+    }
 
-            $sendData = [];
-            $sendData = $this->packString( $sendData, $channel );
+    public function getConsumers( string $channel ) {
+        if( !$this->_isVerified ) return false;
 
-            if( !$this->sendCmd( Codes::CODE_GET_CONSUMERS, $sendData ) ) return false;
+        $sendData = [];
+        $sendData = $this->packString( $sendData, $channel );
 
-            $res = $this->recvCmd();
+        if( !$this->sendCmd( Codes::CODE_GET_CONSUMERS, $sendData ) ) return false;
 
-            return $res['data'];
-        }
+        $res = $this->recvCmd();
 
-        public function addConsumer( string $channel, string $login, string $password ) {
-            if( !$this->_isVerified ) return false;
+        return $res['data'];
+    }
 
-            $sendData = [];
-            $sendData = $this->packString( $sendData, $channel );
-            $sendData = $this->packString( $sendData, $login );
-            $sendData = $this->packPassword( $sendData, $password );
+    public function addConsumer( string $channel, string $login, string $password ) {
+        if( !$this->_isVerified ) return false;
 
-            if( !$this->sendCmd( Codes::CODE_ADD_CONSUMER, $sendData ) ) return false;
+        $sendData = [];
+        $sendData = $this->packString( $sendData, $channel );
+        $sendData = $this->packString( $sendData, $login );
+        $sendData = $this->packPassword( $sendData, $password );
 
-            $this->recvCmd();
-        }
+        if( !$this->sendCmd( Codes::CODE_ADD_CONSUMER, $sendData ) ) return false;
 
-        public function updateConsumerPassword( string $channel, string $login, string $password ) {
-            if( !$this->_isVerified ) return false;
+        $this->recvCmd();
+    }
 
-            $sendData = [];
-            $sendData = $this->packString( $sendData, $channel );
-            $sendData = $this->packString( $sendData, $login );
-            $sendData = $this->packPassword( $sendData, $password );
+    public function updateConsumerPassword( string $channel, string $login, string $password ) {
+        if( !$this->_isVerified ) return false;
 
-            if( !$this->sendCmd( Codes::CODE_UPDATE_CONSUMER_PASSWORD, $sendData ) ) return false;
+        $sendData = [];
+        $sendData = $this->packString( $sendData, $channel );
+        $sendData = $this->packString( $sendData, $login );
+        $sendData = $this->packPassword( $sendData, $password );
 
-            $this->recvCmd();
-        }
+        if( !$this->sendCmd( Codes::CODE_UPDATE_CONSUMER_PASSWORD, $sendData ) ) return false;
 
-        public function removeConsumer( string $channel, string $login ) {
-            if( !$this->_isVerified ) return false;
+        $this->recvCmd();
+    }
 
-            $sendData = [];
-            $sendData = $this->packString( $sendData, $channel );
-            $sendData = $this->packString( $sendData, $login );
+    public function removeConsumer( string $channel, string $login ) {
+        if( !$this->_isVerified ) return false;
 
-            if( !$this->sendCmd( Codes::CODE_REMOVE_CONSUMER, $sendData ) ) return false;
+        $sendData = [];
+        $sendData = $this->packString( $sendData, $channel );
+        $sendData = $this->packString( $sendData, $login );
 
-            $this->recvCmd();
-        }
+        if( !$this->sendCmd( Codes::CODE_REMOVE_CONSUMER, $sendData ) ) return false;
 
-        public function getProducers( string $channel ) {
-            if( !$this->_isVerified ) return false;
+        $this->recvCmd();
+    }
 
-            $sendData = [];
-            $sendData = $this->packString( $sendData, $channel );
+    public function getProducers( string $channel ) {
+        if( !$this->_isVerified ) return false;
 
-            if( !$this->sendCmd( Codes::CODE_GET_PRODUCERS, $sendData ) ) return false;
+        $sendData = [];
+        $sendData = $this->packString( $sendData, $channel );
 
-            $res = $this->recvCmd();
+        if( !$this->sendCmd( Codes::CODE_GET_PRODUCERS, $sendData ) ) return false;
 
-            return $res['data'];
-        }
+        $res = $this->recvCmd();
 
-        public function addProducer( string $channel, string $login, string $password ) {
-            if( !$this->_isVerified ) return false;
+        return $res['data'];
+    }
 
-            $sendData = [];
-            $sendData = $this->packString( $sendData, $channel );
-            $sendData = $this->packString( $sendData, $login );
-            $sendData = $this->packPassword( $sendData, $password );
+    public function addProducer( string $channel, string $login, string $password ) {
+        if( !$this->_isVerified ) return false;
 
-            if( !$this->sendCmd( Codes::CODE_ADD_PRODUCER, $sendData ) ) return false;
+        $sendData = [];
+        $sendData = $this->packString( $sendData, $channel );
+        $sendData = $this->packString( $sendData, $login );
+        $sendData = $this->packPassword( $sendData, $password );
 
-            $this->recvCmd();
-        }
+        if( !$this->sendCmd( Codes::CODE_ADD_PRODUCER, $sendData ) ) return false;
 
-        public function updateProducerPassword( string $channel, string $login, string $password ) {
-            if( !$this->_isVerified ) return false;
+        $this->recvCmd();
+    }
 
-            $sendData = [];
-            $sendData = $this->packString( $sendData, $channel );
-            $sendData = $this->packString( $sendData, $login );
-            $sendData = $this->packPassword( $sendData, $password );
+    public function updateProducerPassword( string $channel, string $login, string $password ) {
+        if( !$this->_isVerified ) return false;
 
-            if( !$this->sendCmd( Codes::CODE_UPDATE_PROCUCER_PASSWORD, $sendData ) ) return false;
+        $sendData = [];
+        $sendData = $this->packString( $sendData, $channel );
+        $sendData = $this->packString( $sendData, $login );
+        $sendData = $this->packPassword( $sendData, $password );
 
-            $this->recvCmd();
-        }
+        if( !$this->sendCmd( Codes::CODE_UPDATE_PROCUCER_PASSWORD, $sendData ) ) return false;
 
-        public function removeProducer( string $channel, string $login ) {
-            if( !$this->_isVerified ) return false;
+        $this->recvCmd();
+    }
 
-            $sendData = [];
-            $sendData = $this->packString( $sendData, $channel );
-            $sendData = $this->packString( $sendData, $login );
+    public function removeProducer( string $channel, string $login ) {
+        if( !$this->_isVerified ) return false;
 
-            if( !$this->sendCmd( Codes::CODE_REMOVE_PRODUCER, $sendData ) ) return false;
+        $sendData = [];
+        $sendData = $this->packString( $sendData, $channel );
+        $sendData = $this->packString( $sendData, $login );
 
-            $this->recvCmd();
-        }
+        if( !$this->sendCmd( Codes::CODE_REMOVE_PRODUCER, $sendData ) ) return false;
 
-        public function clearQ( string $channel ) {
-            if( !$this->_isVerified ) return false;
+        $this->recvCmd();
+    }
 
-            $sendData = [];
-            $sendData = $this->packString( $sendData, $channel );
+    public function clearQ( string $channel ) {
+        if( !$this->_isVerified ) return false;
 
-            if( !$this->sendCmd( Codes::CODE_CLEAR_Q, $sendData ) ) return false;
+        $sendData = [];
+        $sendData = $this->packString( $sendData, $channel );
 
-            $this->recvCmd();
-        }
+        if( !$this->sendCmd( Codes::CODE_CLEAR_Q, $sendData ) ) return false;
+
+        $this->recvCmd();
     }
 }
