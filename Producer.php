@@ -95,7 +95,7 @@ namespace SimQ {
             $this->pushMessageFromFile( $file, 0 );
         }
 
-        public function pushMessageFromFile( $file, int $offset ) {
+        public function pushMessageFromFile( $file, int $offset = 0 ) {
             while( true ) {
                 fseek( $file, $offset );
                 $this->sendPart( fread( $file, self::PACKET_SIZE ) );
@@ -117,7 +117,7 @@ namespace SimQ {
             $this->pushMessageFromPath( $path );
         }
 
-        public function sendMessageFromFile( int $length, $file, int $offset ) {
+        public function sendMessageFromFile( int $length, $file, int $offset = 0 ) {
             $this->createMessage( $length );
             $this->pushMessageFromFile( $file, $offset );
         }
