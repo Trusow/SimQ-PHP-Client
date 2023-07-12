@@ -2,8 +2,8 @@
 
 namespace SimQ;
 
-require_once( './Codes.php' );
-require_once( './Base.php' );
+require_once( 'Codes.php' );
+require_once( 'Base.php' );
 
 class Group extends Base {
     function __construct( string $host, int $port, string $group, string $password ) {

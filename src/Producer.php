@@ -2,8 +2,8 @@
 
 namespace SimQ;
 
-require_once( './Codes.php' );
-require_once( './Base.php' );
+require_once( 'Codes.php' );
+require_once( 'Base.php' );
 
 class Producer extends Base {
     private $length = 0;

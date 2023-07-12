@@ -1,7 +1,7 @@
 <?php 
 namespace SimQ;
 
-require_once( './Codes.php' );
+require_once( 'Codes.php' );
 
 class Base {
     private $_version = 0;

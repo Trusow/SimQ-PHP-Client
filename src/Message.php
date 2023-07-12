@@ -2,7 +2,7 @@
 
 namespace SimQ;
 
-require_once( './Codes.php' );
+require_once( 'Codes.php' );
 
 class Message {
     private string $uuid = '';
